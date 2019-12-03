@@ -1,4 +1,4 @@
-import { Component} from "@angular/core";
+import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { PostsService } from "../posts.service";
 
@@ -11,15 +11,18 @@ import { PostsService } from "../posts.service";
 export class PostCreateComponent {
     enteredTitle = "";
     enteredValue = "";
+    isLoading = false;
 
-    constructor( public postsService: PostsService){}
+    constructor(public postsService: PostsService) { }
 
     OnSavePost(form: NgForm) {
         if (form.invalid) {
             return;
         }
+        this.isLoading = true;
         this.postsService.addPost(form.value.title, form.value.content);
-        form.resetForm();
+        
+        //form.resetForm();
     }
 
 }

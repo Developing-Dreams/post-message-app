@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const PostModel = require('./model/post');
 const mongoose = require('mongoose');
+const postRoutes = require('./routes/postRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -22,41 +23,7 @@ app.use((req, res, next)=> {
     next();
 });
 
-app.post('/api/posts', (req,res,next) => {
-    const post = new PostModel({
-        title: req.body.title,
-        content: req.body.content
-    });
-    console.log('post call request body', post);
-    post.save().then( createdPost => {
-        res.status(201).json({
-            message: 'Post added successfully !',
-            postId: createdPost._id
-        });
-    });        
-});
-
-app.get('/api/posts', (req, res, next) => {
-    
-    PostModel.find()
-    .then(documents => {
-        console.log('Posts retrieved from DB:', documents);
-        res.status(200).json({
-            message: 'posts retrieved successfully.',
-            posts: documents
-        });
-    });
-});
-
-app.delete('/api/posts/:id', (req, res, next) => {
-    console.log(req.params.id);
-    PostModel.deleteOne({_id: req.params.id})
-    .then(result =>{
-        console.log(result);
-        res.status(200).json({
-            message: "post deleted successfully !"
-        });
-    });    
-});
+app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;
